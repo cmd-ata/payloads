@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestReport xmlns="http://www.asam.net/ATX">
+    <Metadata>
+        <Title>Test Report with Attribute Injection</Title>
+        <Author>Tester</Author>
+        <Date>2024-11-09</Date>
+    </Metadata>
+    <TestCase id="Test_004" name="&quot;><script>alert(1)</script>">
+        <Result>Pass</Result>
+        <Log>Testing Attribute Injection</Log>
+    </TestCase>
+</TestReport>

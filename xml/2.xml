@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestReport xmlns="http://www.asam.net/ATX">
+    <Metadata>
+        <Title>Test Report with Large Log</Title>
+        <Author>Tester</Author>
+        <Date>2024-11-09</Date>
+    </Metadata>
+    <TestCase>
+        <ID>Test_003</ID>
+        <Name>Large Log Injection</Name>
+        <Result>Fail</Result>
+        <Log>
+            <!-- Large content to stress-test backend -->
+            <![CDATA[
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                <!-- Repeat above text multiple times -->
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            ]]>
+        </Log>
+    </TestCase>
+</TestReport>
