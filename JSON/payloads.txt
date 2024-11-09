@@ -1,0 +1,106 @@
+SQL/NoSQL Injection
+
+{
+  "taskName": "Test Task; DROP TABLE users;",
+  "taskConfig": {
+    "execution": "OR '1'='1'",
+    "parameters": {
+      "$where": "this.field == 'value'"
+    }
+  }
+}
+
+
+Command Injection
+
+{
+  "taskName": "Execute Task",
+  "taskConfig": {
+    "execution": "run; rm -rf /;",
+    "parameters": {
+      "cmd": "sleep 10 && echo Hacked"
+    }
+  }
+}
+
+Boundary Testing and Large Payloads
+{
+  "taskName": "Oversized Task",
+  "taskConfig": {
+    "execution": "valid_command",
+    "parameters": {
+      "param1": "x" * 1000000  // a large string to create a heavy payload
+    }
+  }
+}
+
+
+Deeply Nested JSON:
+
+{
+  "taskName": "Nested Task",
+  "taskConfig": {
+    "level1": {
+      "level2": {
+        "level3": {
+          "level4": {
+            "level5": "nested_value"
+          }
+        }
+      }
+    }
+  }
+}
+
+
+Type and Structure Manipulation
+
+{
+  "taskName": 12345,
+  "taskConfig": {
+    "execution": true,
+    "parameters": ["unexpected", "array", "structure"]
+  }
+}
+
+Missing or Extra Fields:
+
+{
+  "unexpectedField": "should not be here",
+  "taskName": "Task without config"
+}
+
+
+Cross-Site Scripting (XSS) Payloads
+
+{
+  "taskName": "<script>alert('XSS')</script>",
+  "taskConfig": {
+    "execution": "alert(document.cookie)"
+  }
+}
+
+
+Testing for Logic Bypass or Unauthorized Access
+
+{
+  "taskName": "Elevate Privilege",
+  "taskConfig": {
+    "execution": "run_as_admin",
+    "parameters": {
+      "userRole": "admin"
+    }
+  }
+}
+
+
+Recursive or Self-Referential Structures
+
+{
+  "taskName": "Recursive Task",
+  "taskConfig": {
+    "selfRef": {
+      "$ref": "$"
+    }
+  }
+}
