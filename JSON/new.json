@@ -1,0 +1,36 @@
+{
+  "name": "Task Injection Test; DROP TABLE users; --",  // SQL injection attempt
+  "priority": 101,  // Boundary test: Out-of-range value (should be 0-100)
+  "source": {
+    "sourceType": "location",  // Valid sourceType to pass initial checks
+    "path": "/../../etc/passwd"  // Path traversal attempt
+  },
+  "xilConfigRequirements": [
+    {
+      "label": "test_bench_req",
+      "category": "category1",
+      "value": "*.*",  // Wildcard testing for potentially broad matching
+      "details": [
+        {
+          "label": "detail_label",
+          "category": "category1",
+          "value": "<script>alert('XSS')</script>"  // XSS attempt in nested field
+        }
+      ]
+    }
+  ],
+  "extraField": "unexpected_value",  // Field outside the specified schema
+  "details": [
+    {
+      "label": "extra_detail",  // Unrecognized detail field for boundary testing
+      "category": "test_category",
+      "value": 12345  // Using an integer where a string is expected
+    }
+  ],
+  "sourceControl": {
+    "sourceType": "scm",
+    "scmLabel": "scm_test",
+    "scmUrl": "http://malicious-site.com",  // External URL to test for validation
+    "scmCommit": "; rm -rf /"  // Command injection attempt
+  }
+}
