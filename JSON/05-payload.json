@@ -1,0 +1,22 @@
+{
+  "name": "Task Injection Test; DROP TABLE users; --",
+  "priority": 101,
+  "source": {
+    "sourceType": "location",
+    "path": "/../../../etc/passwd"
+  },
+  "xilConfigRequirements": [
+    {
+      "label": "test_bench_req",
+      "category": "category1",
+      "value": "*.*",
+      "details": [
+        {
+          "label": "detail_label",
+          "category": "category1",
+          "value": "<img src=x onerror=alert('XSS')>"  // Adjusted XSS payload
+        }
+      ]
+    }
+  ]
+}
