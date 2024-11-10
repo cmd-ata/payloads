@@ -26,12 +26,19 @@
   "execution": {
     "testcases": [
       {
-        "type": "standard",
-        "testcaseId": "test1",
-        "name": "Critical Test Case",
+        "relativePath": "Commands/InitCommand.sh",
+        "type": "command",
         "parameters": {
           "param1": "value1"
         }
+      },
+      {
+        "relativePath": "Packages/MainTest.pkg",
+        "type": "package"
+      },
+      {
+        "relativePath": "Commands/CleanupCommand.sh",
+        "type": "command"
       }
     ]
   },
