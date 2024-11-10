@@ -1,5 +1,52 @@
-$path = "C:\path\to\your\file.txt"
-$size = 200MB
-$random = New-Object byte[] $size
-(New-Object Random).NextBytes($random)
-[System.IO.File]::WriteAllBytes($path, $random)
+{
+  "metadata": {
+    "name": "Rapid Test Playbook",
+    "taskNameTemplate": "${playbook_name}<script>alert('test')</script>",
+    "labels": [
+      "label1", "label2", "label3", "label4", "label5", "label6", "label7", "label8", "label9", "label10",
+      "label11", "label12", "label13", "label14", "label15", "label16", "label17", "label18", "label19", "label20"
+      // Add more labels here if needed.
+    ]
+  },
+  "workspace": {
+    "source": {
+      "artifactId": "logs11-140",
+      "sourceType": "artifact"
+    },
+    "dependencies": [
+      {
+        "label": "dependency1",
+        "source": {
+          "sourceType": "artifact",
+          "artifactId": "logs11-140"
+        },
+        "copyTo": "/invalid/path/../etc/passwd"  // Test directory traversal attempt
+      }
+    ]
+  },
+  "execution": {
+    "testcases": [
+      {
+        "testcaseId": "test1",
+        "name": "Critical Test Case",
+        "parameters": {
+          "param1": "value1"
+        }
+      }
+    ]
+  },
+  "noImplicitEcuTestStartStop": false,
+  "xilConfigRequirements": [
+    {
+      "category": "performance",
+      "label": "cpu",
+      "value": "high"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "big_param",
+      "value": "A".repeat(5000)  // Large parameter to test backend’s ability to handle oversized values.
+    }
+  ]
+}
