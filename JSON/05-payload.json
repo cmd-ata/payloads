@@ -1,11 +1,10 @@
 {
   "metadata": {
     "name": "Rapid Test Playbook",
-    "taskNameTemplate": "${playbook_name}<script>alert('test')</script>",
+    "taskNameTemplate": "${playbook_name} (${playbook_datetime}) ${distribution_count}",
     "labels": [
-      "label1", "label2", "label3", "label4", "label5", "label6", "label7", "label8", "label9", "label10",
-      "label11", "label12", "label13", "label14", "label15", "label16", "label17", "label18", "label19", "label20"
-      // Add more labels here if needed.
+      "label1", "label2", "label3", "label4", "label5",
+      "label6", "label7", "label8", "label9", "label10"
     ]
   },
   "workspace": {
@@ -20,13 +19,14 @@
           "sourceType": "artifact",
           "artifactId": "logs11-140"
         },
-        "copyTo": "/invalid/path/../etc/passwd"  // Test directory traversal attempt
+        "copyTo": "/invalid/path/../etc/passwd"  // Testing directory traversal handling
       }
     ]
   },
   "execution": {
     "testcases": [
       {
+        "type": "standard",
         "testcaseId": "test1",
         "name": "Critical Test Case",
         "parameters": {
@@ -35,7 +35,7 @@
       }
     ]
   },
-  "noImplicitEcuTestStartStop": false,
+  "noImplicitEcuTestStartStop": true,
   "xilConfigRequirements": [
     {
       "category": "performance",
@@ -46,7 +46,11 @@
   "parameters": [
     {
       "name": "big_param",
-      "value": "A".repeat(5000)  // Large parameter to test backend’s ability to handle oversized values.
+      "value": "A".repeat(5000)  // Large parameter to test backend handling
     }
-  ]
+  ],
+  "additionalSettings": {
+    "analysisExecutionMode": "sequential",
+    "downstreamAnalysisPartitioning": "analysis"
+  }
 }
