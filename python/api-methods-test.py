@@ -1,52 +1,78 @@
-import requests
-import time
+import http.client
+from urllib.parse import urlparse
+from datetime import datetime
 
-url = 'https://api.example.com/endpoint'
-headers = {'Authorization': 'Bearer YOUR_TOKEN'}
-methods = ['GET', 'POST', 'PUT', 'DELETE']  # List of HTTP methods to test
+# Configurable parameters
+BASE_URL = "https://api.example.com"  # Set your base URL here
+ENDPOINTS = ["/path1", "/path2"]  # Add your endpoints here
 
-# Initialize dictionary to store results per method
-results = {method: {'request_count': 0, 'successful_requests': 0, 'rate_limit_hit': False} for method in methods}
+# Bearer token you already have
+ACCESS_TOKEN = "your_access_token_here"
 
-print("Starting API Rate Limiting Test for Multiple HTTP Methods...\n")
+# HTTP methods to test, including all standard ones
+HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD", "CONNECT", "TRACE", "PROPFIND"]
 
-for method in methods:
-    print(f"\nTesting Rate Limiting for {method} requests:")
+def check_allowed_methods(base_url, endpoint, methods, token):
+    allowed_methods = []
+    parsed_url = urlparse(base_url)
+    conn = http.client.HTTPSConnection(parsed_url.netloc) if parsed_url.scheme == "https" else http.client.HTTPConnection(parsed_url.netloc)
     
-    for i in range(1000):
-        # Send request based on method type
-        if method == 'GET':
-            response = requests.get(url, headers=headers)
-        elif method == 'POST':
-            response = requests.post(url, headers=headers, json={"data": "test"})
-        elif method == 'PUT':
-            response = requests.put(url, headers=headers, json={"data": "test"})
-        elif method == 'DELETE':
-            response = requests.delete(url, headers=headers)
-        
-        # Track requests and status codes
-        results[method]['request_count'] += 1
-        print(f"{method} Request {i+1}: Status Code {response.status_code}")
-        
-        # Check for rate limiting
-        if response.status_code == 429:
-            print(f"Rate limit exceeded for {method} method.")
-            results[method]['rate_limit_hit'] = True
-            break  # Stop testing this method if rate limit is hit
-        else:
-            results[method]['successful_requests'] += 1
-        
-        # Delay to control request rate
-        time.sleep(0.1)
+    for method in methods:
+        try:
+            # Construct request headers with Authorization
+            headers = {
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json"
+            }
+            
+            # Make the request
+            conn.request(method, endpoint, headers=headers)
+            response = conn.getresponse()
+            
+            # Check if the method is allowed based on response status code
+            if response.status != 405:  # HTTP 405 means 'Method Not Allowed'
+                allowed_methods.append(method)
+            
+            # Read and close response
+            response.read()
+        except Exception as e:
+            print(f"Error for {method} on {base_url}{endpoint}: {e}")
+    
+    conn.close()
+    return allowed_methods
 
-# Print a summary report for each HTTP method
-print("\n--- Rate Limiting Test Summary ---")
-for method in methods:
-    print(f"\nMethod: {method}")
-    print(f"Total Requests Sent: {results[method]['request_count']}")
-    print(f"Successful Requests (Non-429): {results[method]['successful_requests']}")
-    if results[method]['rate_limit_hit']:
-        print(f"Rate Limit Triggered After {results[method]['request_count']} Requests")
-    else:
-        print("Rate Limit Not Triggered")
-print("-----------------------------------")
+def generate_report(results):
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    report_file = f"http_methods_report_{timestamp}.txt"
+    
+    with open(report_file, "w") as file:
+        file.write(f"HTTP Methods Allowed Report\n")
+        file.write(f"Generated on: {datetime.now()}\n")
+        file.write("=" * 50 + "\n\n")
+        
+        for endpoint, allowed_methods in results.items():
+            file.write(f"Endpoint: {endpoint}\n")
+            file.write("Allowed HTTP Methods:\n")
+            if allowed_methods:
+                for method in allowed_methods:
+                    file.write(f"  - {method}\n")
+            else:
+                file.write("  None\n")
+            file.write("\n" + "=" * 50 + "\n\n")
+    
+    print(f"Report generated: {report_file}")
+
+# Main function to perform tests and generate report
+def main(base_url, endpoints, methods, token):
+    results = {}
+    for endpoint in endpoints:
+        print(f"Testing endpoint: {endpoint}")
+        allowed_methods = check_allowed_methods(base_url, endpoint, methods, token)
+        results[endpoint] = allowed_methods
+    
+    # Generate report with the results
+    generate_report(results)
+
+# Run the script
+if __name__ == "__main__":
+    main(BASE_URL, ENDPOINTS, HTTP_METHODS, ACCESS_TOKEN)
